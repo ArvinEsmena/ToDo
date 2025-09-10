@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClipTask - Simple Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .app-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .task-input {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .task-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .task-input input:focus {
+            border-color: #8E54E9;
+        }
+        
+        .add-btn {
+            background: #8E54E9;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .add-btn:hover {
+            background: #7a3fd6;
+        }
+        
+        .tasks-container {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .task {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #8E54E9;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .task-content {
+            flex: 1;
+            padding-right: 15px;
+            word-break: break-word;
+        }
+        
+        .task-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .task-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #777;
+            transition: color 0.3s;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-btn:hover {
+            color: #4776E6;
+            background-color: #e6efff;
+        }
+        
+        .delete-btn:hover {
+            color: #ff4757;
+            background-color: #ffe6e9;
+        }
+        
+        .clipboard-btn:hover {
+            color: #8E54E9;
+            background-color: #f0e6ff;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .empty-state p {
+            margin-bottom: 15px;
+        }
+        
+        .empty-state button {
+            background: #8E54E9;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Edit mode styling */
+        .edit-mode .task-content {
+            display: none;
+        }
+        
+        .edit-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #8E54E9;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+            display: none;
+        }
+        
+        .edit-mode .edit-input {
+            display: block;
+        }
+        
+        .save-btn {
+            display: none;
+            background: #4776E6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .edit-mode .save-btn {
+            display: block;
+        }
+        
+        .edit-mode .edit-btn {
+            display: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .task-input {
+                flex-direction: column;
+            }
+            
+            .task-input input {
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            
+            .add-btn {
+                border-radius: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-clipboard-list"></i> ClipTask</h1>
+            <p class="app-description">A simple clipboard task manager</p>
+        </header>
+        
+        <div class="task-input">
+            <input type="text" id="new-task-input" placeholder="Enter a new task...">
+            <button class="add-btn" id="add-task-btn">Add Task</button>
+        </div>
+        
+        <div class="tasks-container" id="tasks-container">
+            <!-- Tasks will be added here dynamically -->
+            <div class="empty-state" id="empty-state">
+                <i class="fas fa-tasks"></i>
+                <p>No tasks yet. Add a task to get started!</p>
+                <button id="add-sample-tasks">Add Sample Tasks</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>ClipTask &copy; 2023 - Your simple task management solution</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const newTaskInput = document.getElementById('new-task-input');
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const tasksContainer = document.getElementById('tasks-container');
+            const emptyState = document.getElementById('empty-state');
+            const addSampleTasksBtn = document.getElementById('add-sample-tasks');
+            
+            // Load tasks from localStorage
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            
+            // Function to render tasks
+            function renderTasks() {
+                tasksContainer.innerHTML = '';
+                
+                if (tasks.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                
+                tasks.forEach((task, index) => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task';
+                    taskElement.innerHTML = `
+                        <div class="task-content">${task}</div>
+                        <input type="text" class="edit-input" value="${task}">
+                        <button class="save-btn">Save</button>
+                        <div class="task-buttons">
+                            <button class="task-btn clipboard-btn" title="Copy to clipboard">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="task-btn edit-btn" title="Edit task">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="task-btn delete-btn" title="Delete task">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    tasksContainer.appendChild(taskElement);
+                    
+                    // Add event listeners for the task buttons
+                    const deleteBtn = taskElement.querySelector('.delete-btn');
+                    const editBtn = taskElement.querySelector('.edit-btn');
+                    const clipboardBtn = taskElement.querySelector('.clipboard-btn');
+                    const saveBtn = taskElement.querySelector('.save-btn');
+                    const editInput = taskElement.querySelector('.edit-input');
+                    const taskContent = taskElement.querySelector('.task-content');
+                    
+                    deleteBtn.addEventListener('click', () => {
+                        tasks.splice(index, 1);
+                        saveTasks();
+                        renderTasks();
+                    });
+                    
+                    editBtn.addEventListener('click', () => {
+                        taskElement.classList.add('edit-mode');
+                        editInput.focus();
+                    });
+                    
+                    saveBtn.addEventListener('click', () => {
+                        tasks[index] = editInput.value;
+                        taskElement.classList.remove('edit-mode');
+                        saveTasks();
+                        renderTasks();
+                    });
+                    
+                    clipboardBtn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(task)
+                            .then(() => {
+                                // Visual feedback for copy action
+                                const originalColor = clipboardBtn.style.color;
+                                clipboardBtn.style.color = '#8E54E9';
+                                setTimeout(() => {
+                                    clipboardBtn.style.color = originalColor;
+                                }, 500);
+                            });
+                    });
+                    
+                    // Allow saving by pressing Enter in edit mode
+                    editInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            tasks[index] = editInput.value;
+                            taskElement.classList.remove('edit-mode');
+                            saveTasks();
+                            renderTasks();
+                        }
+                    });
+                });
+            }
+            
+            // Function to save tasks to localStorage
+            function saveTasks() {
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+            
+            // Add new task
+            addTaskBtn.addEventListener('click', () => {
+                const taskText = newTaskInput.value.trim();
+                if (taskText) {
+                    tasks.push(taskText);
+                    saveTasks();
+                    renderTasks();
+                    newTaskInput.value = '';
+                    newTaskInput.focus();
+                }
+            });
+            
+            // Add task on pressing Enter
+            newTaskInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTaskBtn.click();
+                }
+            });
+            
+            // Add sample tasks
+            addSampleTasksBtn.addEventListener('click', () => {
+                tasks = [
+                    'Complete project proposal',
+                    'Buy groceries',
+                    'Schedule team meeting',
+                    'Review documentation',
+                    'Call client for feedback'
+                ];
+                saveTasks();
+                renderTasks();
+            });
+            
+            // Initial render
+            renderTasks();
+        });
+    </script>
+</body>
+</html>
