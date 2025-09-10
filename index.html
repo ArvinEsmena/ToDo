@@ -415,6 +415,171 @@
             opacity: 1;
         }
         
+        /* New: Task categories */
+        .category-tag {
+            position: absolute;
+            top: -8px;
+            right: 10px;
+            background: #8E54E9;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        /* New: Due date styling */
+        .due-date {
+            font-size: 11px;
+            color: #ff4757;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* New: Search functionality */
+        .search-container {
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: #8E54E9;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+        
+        /* New: Sort dropdown */
+        .sort-container {
+            display: flex;
+            justify-content: flex-end;
+            margin: 10px 0;
+        }
+        
+        .sort-select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* New: Task counter */
+        .task-counter {
+            text-align: center;
+            margin: 10px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        /* New: Completed task styling */
+        .task.completed .task-content {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        /* New: Focus mode */
+        .focus-mode .task:not(.focused) {
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+        
+        .focus-btn {
+            display: none;
+        }
+        
+        .task .focus-btn {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .task:hover .focus-btn {
+            display: block;
+        }
+        
+        /* New: Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+        }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+        }
+        
+        body.dark-mode .header-container,
+        body.dark-mode .task-input-container,
+        body.dark-mode .task,
+        body.dark-mode .empty-state {
+            background: rgba(30, 30, 46, 0.95);
+            color: #eee;
+        }
+        
+        body.dark-mode .task-input,
+        body.dark-mode .search-input,
+        body.dark-mode .sort-select {
+            background: #2a2a3c;
+            border-color: #39394a;
+            color: #eee;
+        }
+        
+        body.dark-mode .app-description,
+        body.dark-mode .task-meta,
+        body.dark-mode .task-btn {
+            color: #aaa;
+        }
+        
+        body.dark-mode .empty-state {
+            color: #aaa;
+        }
+        
         /* Responsive design */
         @media (max-width: 768px) {
             .header-container {
@@ -447,12 +612,25 @@
             .task-filter {
                 flex-wrap: wrap;
             }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Floating particles background -->
     <div class="particles" id="particles"></div>
+    
+    <!-- Dark mode toggle -->
+    <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
     
     <div class="header-container">
         <header>
@@ -465,10 +643,32 @@
             <button class="add-btn" id="add-task-btn">Add Task</button>
         </div>
         
+        <!-- Search functionality -->
+        <div class="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Search tasks...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        
         <div class="task-filter">
             <button class="filter-btn active" data-filter="all">All Tasks</button>
             <button class="filter-btn" data-filter="active">Active</button>
             <button class="filter-btn" data-filter="completed">Completed</button>
+            <button class="filter-btn" data-filter="high">High Priority</button>
+        </div>
+        
+        <!-- Task counter -->
+        <div class="task-counter" id="task-counter">
+            Total tasks: 0 | Completed: 0 | Pending: 0
+        </div>
+        
+        <!-- Sort dropdown -->
+        <div class="sort-container">
+            <select class="sort-select" id="sort-select">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="priority">Priority</option>
+                <option value="alphabetical">A-Z</option>
+            </select>
         </div>
     </div>
     
@@ -499,6 +699,10 @@
             const filterButtons = document.querySelectorAll('.filter-btn');
             const toast = document.getElementById('toast');
             const particlesContainer = document.getElementById('particles');
+            const searchInput = document.getElementById('search-input');
+            const sortSelect = document.getElementById('sort-select');
+            const taskCounter = document.getElementById('task-counter');
+            const themeToggle = document.getElementById('theme-toggle');
             
             // Create floating particles background
             createParticles();
@@ -508,6 +712,12 @@
             
             // Current filter state
             let currentFilter = 'all';
+            
+            // Current search term
+            let searchTerm = '';
+            
+            // Current sort method
+            let sortMethod = 'newest';
             
             // Function to create floating particles
             function createParticles() {
@@ -548,15 +758,45 @@
                 return { x, y };
             }
             
-            // Function to render tasks based on current filter
+            // Function to update task counter
+            function updateTaskCounter() {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.completed).length;
+                const pendingTasks = totalTasks - completedTasks;
+                
+                taskCounter.textContent = `Total tasks: ${totalTasks} | Completed: ${completedTasks} | Pending: ${pendingTasks}`;
+            }
+            
+            // Function to render tasks based on current filter, search, and sort
             function renderTasks() {
                 tasksContainer.innerHTML = '';
                 
-                const filteredTasks = tasks.filter(task => {
-                    if (currentFilter === 'all') return true;
-                    if (currentFilter === 'active') return !task.completed;
-                    if (currentFilter === 'completed') return task.completed;
-                    return true;
+                let filteredTasks = tasks.filter(task => {
+                    // Filter by status
+                    let statusMatch = true;
+                    if (currentFilter === 'active') statusMatch = !task.completed;
+                    if (currentFilter === 'completed') statusMatch = task.completed;
+                    if (currentFilter === 'high') statusMatch = task.priority === 'high';
+                    
+                    // Filter by search term
+                    const textMatch = task.text.toLowerCase().includes(searchTerm.toLowerCase());
+                    
+                    return statusMatch && textMatch;
+                });
+                
+                // Sort tasks
+                filteredTasks.sort((a, b) => {
+                    if (sortMethod === 'newest') {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    } else if (sortMethod === 'oldest') {
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                    } else if (sortMethod === 'priority') {
+                        const priorityOrder = { high: 3, medium: 2, low: 1 };
+                        return (priorityOrder[b.priority] || 1) - (priorityOrder[a.priority] || 1);
+                    } else if (sortMethod === 'alphabetical') {
+                        return a.text.localeCompare(b.text);
+                    }
+                    return 0;
                 });
                 
                 if (filteredTasks.length === 0) {
@@ -579,7 +819,37 @@
                     const createdDate = task.createdAt ? new Date(task.createdAt) : new Date();
                     const formattedDate = createdDate.toLocaleDateString();
                     
+                    // Format due date if exists
+                    let dueDateHtml = '';
+                    if (task.dueDate) {
+                        const dueDate = new Date(task.dueDate);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        
+                        let dueClass = '';
+                        if (dueDate < today && !task.completed) {
+                            dueClass = 'overdue';
+                        } else if (dueDate.getTime() === today.getTime()) {
+                            dueClass = 'today';
+                        }
+                        
+                        dueDateHtml = `<div class="due-date ${dueClass}">
+                            <i class="far fa-calendar-alt"></i>
+                            ${dueDate.toLocaleDateString()}
+                        </div>`;
+                    }
+                    
+                    // Add category tag if exists
+                    let categoryHtml = '';
+                    if (task.category) {
+                        categoryHtml = `<span class="category-tag">${task.category}</span>`;
+                    }
+                    
                     taskElement.innerHTML = `
+                        ${categoryHtml}
+                        <button class="focus-btn" title="Focus on this task">
+                            <i class="fas fa-expand"></i>
+                        </button>
                         <div class="task-meta">
                             <span>${formattedDate}</span>
                             <div style="display: flex; align-items: center;">
@@ -590,11 +860,18 @@
                             </div>
                         </div>
                         <div class="task-content">${task.text}</div>
+                        ${dueDateHtml}
                         <input type="text" class="edit-input" value="${task.text}">
                         <button class="save-btn">Save</button>
                         <div class="task-buttons">
                             <button class="task-btn clipboard-btn" title="Copy to clipboard">
                                 <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="task-btn due-date-btn" title="Set due date">
+                                <i class="far fa-calendar"></i>
+                            </button>
+                            <button class="task-btn category-btn" title="Add category">
+                                <i class="fas fa-tag"></i>
                             </button>
                             <button class="task-btn complete-btn" title="${task.completed ? 'Mark as active' : 'Mark as complete'}">
                                 <i class="fas fa-${task.completed ? 'undo' : 'check'}"></i>
@@ -621,6 +898,9 @@
                     const editInput = taskElement.querySelector('.edit-input');
                     const completeBtn = taskElement.querySelector('.complete-btn');
                     const priorityBtn = taskElement.querySelector('.priority-btn');
+                    const dueDateBtn = taskElement.querySelector('.due-date-btn');
+                    const categoryBtn = taskElement.querySelector('.category-btn');
+                    const focusBtn = taskElement.querySelector('.focus-btn');
                     
                     deleteBtn.addEventListener('click', () => {
                         tasks = tasks.filter(t => t.id !== task.id);
@@ -676,6 +956,51 @@
                         }
                     });
                     
+                    dueDateBtn.addEventListener('click', () => {
+                        const taskIndex = tasks.findIndex(t => t.id === task.id);
+                        if (taskIndex !== -1) {
+                            const newDate = prompt('Enter due date (YYYY-MM-DD):', task.dueDate || '');
+                            if (newDate !== null) {
+                                if (newDate === '') {
+                                    delete tasks[taskIndex].dueDate;
+                                } else {
+                                    tasks[taskIndex].dueDate = newDate;
+                                }
+                                saveTasks();
+                                renderTasks();
+                                showToast('Due date updated');
+                            }
+                        }
+                    });
+                    
+                    categoryBtn.addEventListener('click', () => {
+                        const taskIndex = tasks.findIndex(t => t.id === task.id);
+                        if (taskIndex !== -1) {
+                            const newCategory = prompt('Enter category:', task.category || '');
+                            if (newCategory !== null) {
+                                if (newCategory === '') {
+                                    delete tasks[taskIndex].category;
+                                } else {
+                                    tasks[taskIndex].category = newCategory;
+                                }
+                                saveTasks();
+                                renderTasks();
+                                showToast('Category updated');
+                            }
+                        }
+                    });
+                    
+                    focusBtn.addEventListener('click', () => {
+                        tasksContainer.classList.toggle('focus-mode');
+                        taskElement.classList.toggle('focused');
+                        
+                        if (tasksContainer.classList.contains('focus-mode')) {
+                            showToast('Focus mode enabled. Click again to exit.');
+                        } else {
+                            showToast('Focus mode disabled.');
+                        }
+                    });
+                    
                     // Allow saving by pressing Enter in edit mode
                     editInput.addEventListener('keypress', (e) => {
                         if (e.key === 'Enter') {
@@ -683,6 +1008,8 @@
                         }
                     });
                 });
+                
+                updateTaskCounter();
             }
             
             // Function to make tasks draggable
@@ -734,6 +1061,7 @@
             // Function to save tasks to localStorage
             function saveTasks() {
                 localStorage.setItem('floatTasks', JSON.stringify(tasks));
+                updateTaskCounter();
             }
             
             // Generate unique ID for tasks
@@ -772,24 +1100,24 @@
             // Add sample tasks
             addSampleTasksBtn.addEventListener('click', () => {
                 const sampleTasks = [
-                    'Complete project proposal',
-                    'Buy groceries',
-                    'Schedule team meeting',
-                    'Review documentation',
-                    'Call client for feedback',
-                    'Plan weekend activities',
-                    'Read new book chapter',
-                    'Organize workspace'
+                    { text: 'Complete project proposal', priority: 'high' },
+                    { text: 'Buy groceries', priority: 'medium' },
+                    { text: 'Schedule team meeting', priority: 'high' },
+                    { text: 'Review documentation', priority: 'low' },
+                    { text: 'Call client for feedback', priority: 'medium' },
+                    { text: 'Plan weekend activities', priority: 'low' },
+                    { text: 'Read new book chapter', priority: 'low' },
+                    { text: 'Organize workspace', priority: 'medium' }
                 ];
                 
-                tasks = sampleTasks.map(text => {
+                tasks = sampleTasks.map(task => {
                     return { 
                         id: generateId(),
-                        text, 
+                        text: task.text, 
                         position: getRandomPosition(),
                         createdAt: new Date().toISOString(),
                         completed: false,
-                        priority: 'low'
+                        priority: task.priority
                     };
                 });
                 
@@ -807,6 +1135,41 @@
                     renderTasks();
                 });
             });
+            
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                searchTerm = searchInput.value;
+                renderTasks();
+            });
+            
+            // Sort functionality
+            sortSelect.addEventListener('change', () => {
+                sortMethod = sortSelect.value;
+                renderTasks();
+            });
+            
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                
+                if (isDarkMode) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    showToast('Dark mode enabled');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    showToast('Light mode enabled');
+                }
+                
+                localStorage.setItem('floatTasksTheme', isDarkMode ? 'dark' : 'light');
+            });
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('floatTasksTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
             
             // Initial render
             renderTasks();
