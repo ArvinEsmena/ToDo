@@ -21,10 +21,44 @@
             position: relative;
         }
         
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-35px) translateX(-15px);
+            }
+            75% {
+                transform: translateY(-15px) translateX(15px);
+            }
+        }
+        
         .header-container {
             max-width: 800px;
             margin: 0 auto 30px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -84,11 +118,41 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         
         .add-btn:hover {
             background: #7a3fd6;
+            transform: translateY(-2px);
+        }
+        
+        /* Task filter controls */
+        .task-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+        }
+        
+        .filter-btn {
+            background: rgba(142, 84, 233, 0.1);
+            color: #8E54E9;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: #8E54E9;
+            color: white;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(142, 84, 233, 0.2);
         }
         
         /* Floating tasks area */
@@ -108,6 +172,12 @@
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: grab;
             z-index: 1;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .task:hover {
@@ -116,11 +186,26 @@
             z-index: 2;
         }
         
+        .task.dragging {
+            cursor: grabbing;
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            z-index: 100;
+        }
+        
         .task-content {
             font-size: 16px;
             margin-bottom: 15px;
             word-break: break-word;
             min-height: 60px;
+        }
+        
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
         }
         
         .task-buttons {
@@ -136,7 +221,7 @@
             cursor: pointer;
             font-size: 16px;
             color: #777;
-            transition: color 0.3s;
+            transition: all 0.3s;
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -158,6 +243,37 @@
         .clipboard-btn:hover {
             color: #8E54E9;
             background-color: #f0e6ff;
+        }
+        
+        .priority-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .priority-low {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+        
+        .priority-medium {
+            background-color: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .priority-high {
+            background-color: #fff1f0;
+            color: #f5222d;
         }
         
         .empty-state {
@@ -191,11 +307,12 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
         
         .empty-state button:hover {
             background: #7a3fd6;
+            transform: translateY(-2px);
         }
         
         footer {
@@ -208,20 +325,28 @@
         }
         
         /* Task color variations */
-        .task:nth-child(4n+1) {
+        .task:nth-child(6n+1) {
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
         }
         
-        .task:nth-child(4n+2) {
+        .task:nth-child(6n+2) {
             background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
         }
         
-        .task:nth-child(4n+3) {
+        .task:nth-child(6n+3) {
             background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
         }
         
-        .task:nth-child(4n+4) {
+        .task:nth-child(6n+4) {
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+        
+        .task:nth-child(6n+5) {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        .task:nth-child(6n+6) {
+            background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
         }
         
         /* Edit mode styling */
@@ -254,6 +379,11 @@
             font-size: 14px;
             width: 100%;
             margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .save-btn:hover {
+            background: #3b62c0;
         }
         
         .edit-mode .save-btn {
@@ -262,6 +392,27 @@
         
         .edit-mode .edit-btn {
             display: none;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
         
         /* Responsive design */
@@ -289,12 +440,20 @@
             }
             
             .task {
-                width: 200px;
+                width: calc(100% - 40px);
+                max-width: 300px;
+            }
+            
+            .task-filter {
+                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Floating particles background -->
+    <div class="particles" id="particles"></div>
+    
     <div class="header-container">
         <header>
             <h1><i class="fas fa-cloud"></i> FloatTask</h1>
@@ -304,6 +463,12 @@
         <div class="task-input-container">
             <input type="text" class="task-input" id="new-task-input" placeholder="Enter a new task...">
             <button class="add-btn" id="add-task-btn">Add Task</button>
+        </div>
+        
+        <div class="task-filter">
+            <button class="filter-btn active" data-filter="all">All Tasks</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
         </div>
     </div>
     
@@ -315,6 +480,9 @@
             <button id="add-sample-tasks">Add Sample Tasks</button>
         </div>
     </div>
+    
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
     
     <footer>
         <p>FloatTask &copy; 2023 - Drag, drop, and organize your way</p>
@@ -328,9 +496,50 @@
             const tasksContainer = document.getElementById('tasks-container');
             const emptyState = document.getElementById('empty-state');
             const addSampleTasksBtn = document.getElementById('add-sample-tasks');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const toast = document.getElementById('toast');
+            const particlesContainer = document.getElementById('particles');
+            
+            // Create floating particles background
+            createParticles();
             
             // Load tasks from localStorage
             let tasks = JSON.parse(localStorage.getItem('floatTasks')) || [];
+            
+            // Current filter state
+            let currentFilter = 'all';
+            
+            // Function to create floating particles
+            function createParticles() {
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Random size between 3-8px
+                    const size = Math.random() * 5 + 3;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // Random position
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    
+                    // Random animation delay
+                    particle.style.animationDelay = `${Math.random() * 15}s`;
+                    
+                    particlesContainer.appendChild(particle);
+                }
+            }
+            
+            // Function to show toast notification
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
             
             // Function to get random position for floating tasks
             function getRandomPosition() {
@@ -339,31 +548,54 @@
                 return { x, y };
             }
             
-            // Function to render tasks
+            // Function to render tasks based on current filter
             function renderTasks() {
                 tasksContainer.innerHTML = '';
                 
-                if (tasks.length === 0) {
+                const filteredTasks = tasks.filter(task => {
+                    if (currentFilter === 'all') return true;
+                    if (currentFilter === 'active') return !task.completed;
+                    if (currentFilter === 'completed') return task.completed;
+                    return true;
+                });
+                
+                if (filteredTasks.length === 0) {
                     emptyState.style.display = 'block';
                     return;
                 }
                 
                 emptyState.style.display = 'none';
                 
-                tasks.forEach((task, index) => {
+                filteredTasks.forEach((task, index) => {
                     const { x, y } = task.position || getRandomPosition();
                     
                     const taskElement = document.createElement('div');
-                    taskElement.className = 'task';
+                    taskElement.className = `task ${task.completed ? 'completed' : ''}`;
                     taskElement.style.left = `${x}px`;
                     taskElement.style.top = `${y}px`;
+                    taskElement.dataset.id = task.id;
+                    
+                    // Format creation date
+                    const createdDate = task.createdAt ? new Date(task.createdAt) : new Date();
+                    const formattedDate = createdDate.toLocaleDateString();
+                    
                     taskElement.innerHTML = `
+                        <div class="task-meta">
+                            <span>${formattedDate}</span>
+                            <span class="task-status">${task.completed ? 'Completed' : 'Active'}</span>
+                        </div>
                         <div class="task-content">${task.text}</div>
                         <input type="text" class="edit-input" value="${task.text}">
                         <button class="save-btn">Save</button>
+                        <button class="priority-btn priority-${task.priority || 'low'}" title="Change priority">
+                            <i class="fas fa-${task.priority === 'high' ? 'exclamation-circle' : task.priority === 'medium' ? 'minus-circle' : 'arrow-down'}"></i>
+                        </button>
                         <div class="task-buttons">
                             <button class="task-btn clipboard-btn" title="Copy to clipboard">
                                 <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="task-btn complete-btn" title="${task.completed ? 'Mark as active' : 'Mark as complete'}">
+                                <i class="fas fa-${task.completed ? 'undo' : 'check'}"></i>
                             </button>
                             <button class="task-btn edit-btn" title="Edit task">
                                 <i class="fas fa-edit"></i>
@@ -377,7 +609,7 @@
                     tasksContainer.appendChild(taskElement);
                     
                     // Make task draggable
-                    makeDraggable(taskElement, index);
+                    makeDraggable(taskElement, task.id);
                     
                     // Add event listeners for the task buttons
                     const deleteBtn = taskElement.querySelector('.delete-btn');
@@ -385,11 +617,14 @@
                     const clipboardBtn = taskElement.querySelector('.clipboard-btn');
                     const saveBtn = taskElement.querySelector('.save-btn');
                     const editInput = taskElement.querySelector('.edit-input');
+                    const completeBtn = taskElement.querySelector('.complete-btn');
+                    const priorityBtn = taskElement.querySelector('.priority-btn');
                     
                     deleteBtn.addEventListener('click', () => {
-                        tasks.splice(index, 1);
+                        tasks = tasks.filter(t => t.id !== task.id);
                         saveTasks();
                         renderTasks();
+                        showToast('Task deleted');
                     });
                     
                     editBtn.addEventListener('click', () => {
@@ -398,38 +633,58 @@
                     });
                     
                     saveBtn.addEventListener('click', () => {
-                        tasks[index].text = editInput.value;
-                        taskElement.classList.remove('edit-mode');
-                        saveTasks();
-                        renderTasks();
+                        const taskIndex = tasks.findIndex(t => t.id === task.id);
+                        if (taskIndex !== -1) {
+                            tasks[taskIndex].text = editInput.value;
+                            taskElement.classList.remove('edit-mode');
+                            saveTasks();
+                            renderTasks();
+                            showToast('Task updated');
+                        }
                     });
                     
                     clipboardBtn.addEventListener('click', () => {
                         navigator.clipboard.writeText(task.text)
                             .then(() => {
-                                // Visual feedback for copy action
-                                const originalColor = clipboardBtn.style.color;
-                                clipboardBtn.style.color = '#8E54E9';
-                                setTimeout(() => {
-                                    clipboardBtn.style.color = originalColor;
-                                }, 500);
+                                showToast('Copied to clipboard');
                             });
+                    });
+                    
+                    completeBtn.addEventListener('click', () => {
+                        const taskIndex = tasks.findIndex(t => t.id === task.id);
+                        if (taskIndex !== -1) {
+                            tasks[taskIndex].completed = !tasks[taskIndex].completed;
+                            saveTasks();
+                            renderTasks();
+                            showToast(`Task marked as ${tasks[taskIndex].completed ? 'completed' : 'active'}`);
+                        }
+                    });
+                    
+                    priorityBtn.addEventListener('click', () => {
+                        const taskIndex = tasks.findIndex(t => t.id === task.id);
+                        if (taskIndex !== -1) {
+                            const priorities = ['low', 'medium', 'high'];
+                            const currentPriority = tasks[taskIndex].priority || 'low';
+                            const nextPriority = priorities[(priorities.indexOf(currentPriority) + 1) % priorities.length];
+                            
+                            tasks[taskIndex].priority = nextPriority;
+                            saveTasks();
+                            renderTasks();
+                            showToast(`Priority set to ${nextPriority}`);
+                        }
                     });
                     
                     // Allow saving by pressing Enter in edit mode
                     editInput.addEventListener('keypress', (e) => {
                         if (e.key === 'Enter') {
-                            tasks[index].text = editInput.value;
-                            taskElement.classList.remove('edit-mode');
-                            saveTasks();
-                            renderTasks();
+                            saveBtn.click();
                         }
                     });
                 });
             }
             
             // Function to make tasks draggable
-            function makeDraggable(element, index) {
+            function makeDraggable(element, taskId) {
                 let isDragging = false;
                 let startX, startY, initialX, initialY;
                 
@@ -437,7 +692,7 @@
                     if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
                     
                     isDragging = true;
-                    element.style.cursor = 'grabbing';
+                    element.classList.add('dragging');
                     startX = e.clientX;
                     startY = e.clientY;
                     initialX = parseInt(element.style.left, 10);
@@ -460,14 +715,17 @@
                     if (!isDragging) return;
                     
                     isDragging = false;
-                    element.style.cursor = 'grab';
+                    element.classList.remove('dragging');
                     
                     // Save new position
-                    tasks[index].position = {
-                        x: parseInt(element.style.left, 10),
-                        y: parseInt(element.style.top, 10)
-                    };
-                    saveTasks();
+                    const taskIndex = tasks.findIndex(t => t.id === taskId);
+                    if (taskIndex !== -1) {
+                        tasks[taskIndex].position = {
+                            x: parseInt(element.style.left, 10),
+                            y: parseInt(element.style.top, 10)
+                        };
+                        saveTasks();
+                    }
                 });
             }
             
@@ -476,16 +734,29 @@
                 localStorage.setItem('floatTasks', JSON.stringify(tasks));
             }
             
+            // Generate unique ID for tasks
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+            
             // Add new task
             addTaskBtn.addEventListener('click', () => {
                 const taskText = newTaskInput.value.trim();
                 if (taskText) {
                     const position = getRandomPosition();
-                    tasks.push({ text: taskText, position });
+                    tasks.push({ 
+                        id: generateId(),
+                        text: taskText, 
+                        position,
+                        createdAt: new Date().toISOString(),
+                        completed: false,
+                        priority: 'low'
+                    });
                     saveTasks();
                     renderTasks();
                     newTaskInput.value = '';
                     newTaskInput.focus();
+                    showToast('Task added');
                 }
             });
             
@@ -510,11 +781,29 @@
                 ];
                 
                 tasks = sampleTasks.map(text => {
-                    return { text, position: getRandomPosition() };
+                    return { 
+                        id: generateId(),
+                        text, 
+                        position: getRandomPosition(),
+                        createdAt: new Date().toISOString(),
+                        completed: false,
+                        priority: 'low'
+                    };
                 });
                 
                 saveTasks();
                 renderTasks();
+                showToast('Sample tasks added');
+            });
+            
+            // Filter tasks
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentFilter = button.dataset.filter;
+                    renderTasks();
+                });
             });
             
             // Initial render
