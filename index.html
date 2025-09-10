@@ -167,7 +167,7 @@
             background: white;
             border-radius: 12px;
             padding: 18px;
-            width: 220px;
+            width: 240px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: grab;
@@ -203,9 +203,11 @@
         .task-meta {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 12px;
             color: #888;
             margin-bottom: 10px;
+            position: relative;
         }
         
         .task-buttons {
@@ -246,9 +248,6 @@
         }
         
         .priority-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
             width: 24px;
             height: 24px;
             border-radius: 50%;
@@ -259,6 +258,7 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
+            margin-left: 8px;
         }
         
         .priority-low {
@@ -582,14 +582,16 @@
                     taskElement.innerHTML = `
                         <div class="task-meta">
                             <span>${formattedDate}</span>
-                            <span class="task-status">${task.completed ? 'Completed' : 'Active'}</span>
+                            <div style="display: flex; align-items: center;">
+                                <span class="task-status">${task.completed ? 'Completed' : 'Active'}</span>
+                                <button class="priority-btn priority-${task.priority || 'low'}" title="Change priority">
+                                    <i class="fas fa-${task.priority === 'high' ? 'exclamation-circle' : task.priority === 'medium' ? 'minus-circle' : 'arrow-down'}"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="task-content">${task.text}</div>
                         <input type="text" class="edit-input" value="${task.text}">
                         <button class="save-btn">Save</button>
-                        <button class="priority-btn priority-${task.priority || 'low'}" title="Change priority">
-                            <i class="fas fa-${task.priority === 'high' ? 'exclamation-circle' : task.priority === 'medium' ? 'minus-circle' : 'arrow-down'}"></i>
-                        </button>
                         <div class="task-buttons">
                             <button class="task-btn clipboard-btn" title="Copy to clipboard">
                                 <i class="fas fa-copy"></i>
